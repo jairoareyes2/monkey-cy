@@ -3,19 +3,19 @@ require('cypress-plugin-tab')
 var fs = require('fs')
 
 const url = Cypress.config('baseUrl') || "https://uniandes.edu.co/"
-const appName = Cypress.env('appName')|| "your app"
-const events = Cypress.env('events')|| 100
-const delay = Cypress.env('delay') || 100
-var seed = Cypress.env('seed')
+const appName = Cypress.env('monkey').appName|| "your app"
+const events = Cypress.env('monkey').events|| 100
+const delay = Cypress.env('monkey').delay || 100
+var seed = Cypress.env('monkey').seed
 
-const pct_clicks = Cypress.env('pctClicks') || 19
-const pct_scrolls = Cypress.env('pctScroll') || 17
-const pct_selectors = Cypress.env('pctSelectors') || 16
-const pct_keys = Cypress.env('pctKeys') || 16
-const pct_spkeys = Cypress.env('pctSpKeys') || 16
-const pct_pgnav = Cypress.env('pctPgNav') || 16 
+const pct_clicks = Cypress.env('monkey').pctClicks || 19
+const pct_scrolls = Cypress.env('monkey').pctScroll || 17
+const pct_selectors = Cypress.env('monkey').pctSelectors || 16
+const pct_keys = Cypress.env('monkey').pctKeys || 16
+const pct_spkeys = Cypress.env('monkey').pctSpKeys || 16
+const pct_pgnav = Cypress.env('monkey').pctPgNav || 16 
 
-const LOG_FILENAME = "../../../results/monkey-execution.html"
+const LOG_FILENAME = "results/monkey-report.html"
 
 /*
  Bob Jenkins Small Fast, aka smallprng pseudo random number generator is the chosen selection for introducing seeding in the tester
@@ -120,7 +120,7 @@ function randClick(){
             cy.get('body').click(randX, randY, {force:true})
             info = `Position: (${randX}, ${randY}). INVALID, no selectable element`
         }
-        // cy.task("logCommand", { funtype: "Random click", info: info})
+        cy.task("logCommand", {"logFilename": LOG_FILENAME, funtype: "Random click", info: info})
         focused = !!win.document.activeElement
     })
 }
@@ -174,7 +174,7 @@ function randDClick(){
             cy.get('body').dblclick(randX, randY, {force: true})
             info = `Position: (${randX}, ${randY}). INVALID, no selectable element`
         }
-        // cy.task("logCommand", { funtype: "Random double click", info: info})
+        cy.task("logCommand", {"logFilename": LOG_FILENAME, funtype: "Random double click", info: info})
         focused = !!win.document.activeElement
     })
 }
@@ -227,7 +227,7 @@ function randRClick(){
             cy.get('body').rightclick(randX, randY, {force:true})
             info = `Position: (${randX}, ${randY}). INVALID, no selectable element`
         }        
-        // cy.task("logCommand", { funtype: "Random right click", info: info})
+        cy.task("logCommand", {"logFilename": LOG_FILENAME, funtype: "Random right click", info: info})
         focused = !!win.document.activeElement
     })
 }
@@ -277,7 +277,7 @@ function randHover(){
             else info = `Position: (${randX}, ${randY}). INVALID, element has no attribute onmouseover`
         }
         else info = `Position: (${randX}, ${randY}). INVALID, no selectable element`
-        // cy.task("logCommand", { funtype: "Selector focus (hover)", info: info})
+        cy.task("logCommand", {"logFilename": LOG_FILENAME, funtype: "Selector focus (hover)", info: info})
         focused = !!win.document.activeElement
     })
 }
@@ -300,7 +300,7 @@ function avPag(){
     else{
         info = "INVALID. Not able to scroll down anymore"
     }
-    // cy.task("logCommand", { funtype: "Scroll event (pg down)", info: info})
+    cy.task("logCommand", {"logFilename": LOG_FILENAME, funtype: "Scroll event (pg down)", info: info})
 }
 
 function rePag(){
@@ -321,7 +321,7 @@ function rePag(){
         }
         info += `Successfully scrolled up from y=${prev} to y=${curY}`
     }
-    // cy.task("logCommand", { funtype: "Scroll event (pg up)", info: info})
+    cy.task("logCommand", {"logFilename": LOG_FILENAME, funtype: "Scroll event (pg up)", info: info})
 }
 
 function horizontalScrollFw(){
@@ -342,7 +342,7 @@ function horizontalScrollFw(){
     else{
         info = "INVALID. Not able to scroll to the right anymore"
     }
-    // cy.task("logCommand", { funtype: "Scroll event (horizontal fw)", info: info})
+    cy.task("logCommand", {"logFilename": LOG_FILENAME, funtype: "Scroll event (horizontal fw)", info: info})
 }
 
 function horizontalScrollBk(){
@@ -363,13 +363,13 @@ function horizontalScrollBk(){
         }
         info += `Successfully scrolled to the left from x=${prev} to x=${curX}`
     }
-    // cy.task("logCommand", { funtype: "Scroll event (horizontal bk)", info: info})
+    cy.task("logCommand", {"logFilename": LOG_FILENAME, funtype: "Scroll event (horizontal bk)", info: info})
 }
 
 function reload(){
     cy.reload()
     focused = false
-    // cy.task("logCommand", { funtype: "Page navigation (Reload)", info: "Successfully reloaded the page"})
+    cy.task("logCommand", {"logFilename": LOG_FILENAME, funtype: "Page navigation (Reload)", info: "Successfully reloaded the page"})
 }
 
 function enter(){
@@ -382,7 +382,7 @@ function enter(){
         cy.get('body').type("{enter}")
         info = "INVALID. No element is in focus"
     }
-    // cy.task("logCommand", { funtype: "Special key press (enter)", info: info})
+    cy.task("logCommand", {"logFilename": LOG_FILENAME, funtype: "Special key press (enter)", info: info})
 }
 
 function typeCharKey(){
@@ -397,7 +397,7 @@ function typeCharKey(){
         cy.get('body').type(type)
         info = "INVALID. No element is in focus"
     }
-    // cy.task("logCommand", { funtype: "Key press", info: info})
+    cy.task("logCommand", {"logFilename": LOG_FILENAME, funtype: "Key press", info: info})
 }
 
 function spkeypress(){
@@ -415,7 +415,7 @@ function spkeypress(){
         cy.get('body').type(type)
         info = `No element is in focus. Pressed the ${type} combination of special keys on the page body`
     }
-    // cy.task("logCommand", { funtype: "Special key press", info: info})
+    cy.task("logCommand", {"logFilename": LOG_FILENAME, funtype: "Special key press", info: info})
 }
 
 function changeViewport(){
@@ -434,7 +434,7 @@ function changeViewport(){
         curPageMaxY = Math.max( d.body.scrollHeight, d.body.offsetHeight, d.documentElement.clientHeight, d.documentElement.scrollHeight, d.documentElement.offsetHeight) - win.innerHeight
         curPageMaxX = Math.max( d.body.scrollWidth, d.body.offsetWidth, d.documentElement.clientWidth, d.documentElement.scrollWidth, d.documentElement.offsetWidth) - win.innerWidth
     })
-    // cy.task("logCommand", { funtype: "Viewport change", info: `Changed the viewport to ${viewports[index]} with ${orientations[oindex]} orientation`})
+    cy.task("logCommand", {"logFilename": LOG_FILENAME, funtype: "Viewport change", info: `Changed the viewport to ${viewports[index]} with ${orientations[oindex]} orientation`})
 }
 
 function navBack(){
@@ -445,13 +445,13 @@ function navBack(){
             info = "Navigated 1 page back"
         }
         else info = "INVALID. Navigation stack empty"
-        // cy.task("logCommand", { funtype: "Page navigation (back)", info: info})
+        cy.task("logCommand", {"logFilename": LOG_FILENAME, funtype: "Page navigation (back)", info: info})
     })
 }
 
 function navForward(){
     cy.go(1)
-    // cy.task("logCommand", { funtype: "Page navigation (forward)", info: "Attempted to navigate 1 page forward"})
+    cy.task("logCommand", {"logFilename": LOG_FILENAME, funtype: "Page navigation (forward)", info: "Attempted to navigate 1 page forward"})
 }
 
 function tab(){
@@ -465,7 +465,7 @@ function tab(){
         info = "Tabbed into the first focusable element of the document"
     }
     focused = true
-    // cy.task("logCommand", { funtype: "Selector focus (tab)", info: info})
+    cy.task("logCommand", {"logFilename": LOG_FILENAME, funtype: "Selector focus (tab)", info: info})
 }
 
 function getEvtType(i){
@@ -487,14 +487,14 @@ const functions = [
     [reload, navBack, navForward, changeViewport]
 ]
 
-//var screenshotIndex = 0
+var screenshotIndex = 0
 
 function randomEvent(){
     let typeIndex = getRandomInt(0, pending_events.length)
     if(pending_events[typeIndex] > 0){
-        //screenshotIndex +=1
+        screenshotIndex +=1
         let fIndex = getRandomInt(0, functions[typeIndex].length-1)
-        cy.screenshot('random-event-' + typeIndex)
+        cy.screenshot(screenshotIndex+"-"+ getEvtType(typeIndex)+"-before");
         functions[typeIndex][fIndex]()
         pending_events[typeIndex] --
         cy.wait(delay)
@@ -511,35 +511,27 @@ var pending_events = [,,,,,]
 
 
 describe(`${appName} bajo el ataque de monos`,  { retries: 3 }, function() {
-
-
-    // Listener
-    beforeEach(()=>{
-        cy.visit(url)
-         cy.wait(1000)
-     })
-
     Cypress.on('uncaught:exception', (err) => {
-        // cy.task('genericLog', {'message': `Se produjo una excepción: ${err}`});
-        // cy.task('genericReport', {'html': `<p><strong>Excepción no capturada: </strong>${err}</p>`});
+        cy.task('genericLog', {'message': `Se produjo una excepción: ${err}`});
+        cy.task('genericReport', {"logFilename": LOG_FILENAME, 'html': `<p><strong>Excepción no capturada: </strong>${err}</p>`});
     });
     Cypress.on('window:alert', (text) => {
-        // cy.task('genericLog', {'message': `Se activó una alerta con el mensaje: "${text}"`});
-        // cy.task('genericReport', {'html': `<p><strong>Se activó una alerta con el mensaje: </strong>${text}</p>`});
+        cy.task('genericLog', {'message': `Se activó una alerta con el mensaje: "${text}"`});
+        cy.task('genericReport', {"logFilename": LOG_FILENAME, 'html': `<p><strong>Se activó una alerta con el mensaje: </strong>${text}</p>`});
     });
     Cypress.on('fail', (err) => {
-        // cy.task('genericLog', {'message': `La prueba falló con el siguiente error: ${err}`});
-        // cy.task('genericReport', {'html': `<p><strong>La prueba falló con el error: </strong>${err}</p>`});
+        cy.task('genericLog', {'message': `La prueba falló con el siguiente error: ${err}`});
+        cy.task('genericReport', {"logFilename": LOG_FILENAME, 'html': `<p><strong>La prueba falló con el error: </strong>${err}</p>`});
         return false;
     });
     it(`visita ${appName} y sobrevive a los monos`, function() {
-        // if (!seed) seed = Cypress._.random(0, Number.MAX_SAFE_INTEGER);
+        if (!seed) seed = Cypress._.random(0, Number.MAX_SAFE_INTEGER);
         cy.log(`Comenzando...`);
         
         cy.log(`Semilla: ${seed}`)
 
-        // // cy.task('logStart', {"type": "monkey", "url": url, "seed": seed})
-        // // cy.task('genericLog', {"message": `Semilla: ${seed}`})
+        cy.task('logStart', {"logFilename": LOG_FILENAME,"type": "monkey", "url": url, "seed": seed})
+        cy.task('genericLog', {"message": `Semilla: ${seed}`})
         let pcg = pct_clicks + pct_scrolls + pct_keys + pct_pgnav + pct_selectors + pct_spkeys
         if (pcg === 100) {
 
@@ -562,11 +554,11 @@ describe(`${appName} bajo el ataque de monos`,  { retries: 3 }, function() {
                 evtIndex++
                 randomEvent()
             }
-        // } else cy.task('logPctNo100')
+        } else cy.task('logPctNo100', {"logFilename": LOG_FILENAME})
 
     });
 
     afterEach(() => {
-        // cy.task('logEnd')
+        cy.task('logEnd', {"logFilename": LOG_FILENAME})
     })
 })
