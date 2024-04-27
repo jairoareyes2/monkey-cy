@@ -495,6 +495,7 @@ function randomEvent(){
         screenshotIndex +=1
         let fIndex = getRandomInt(0, functions[typeIndex].length-1)
         cy.screenshot(screenshotIndex+"-"+ getEvtType(typeIndex)+"-before");
+        cy.task('genericLog', {"message": `Executing: ${functions[typeIndex][fIndex].name}`});
         functions[typeIndex][fIndex]()
         pending_events[typeIndex] --
         cy.wait(delay)

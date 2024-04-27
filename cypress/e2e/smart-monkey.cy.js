@@ -9,7 +9,6 @@ const events = Cypress.env('smartMonkey').events|| 100;
 const delay = Cypress.env('smartMonkey').delay || 100;
 var seed = Cypress.env('smartMonkey').seed;
 
-const num_categories = 7;
 
 const pct_clicks = Cypress.env('smartMonkey').pctClicks || 12;
 const pct_scrolls = Cypress.env('smartMonkey').pctScroll || 12;
@@ -88,7 +87,7 @@ function randClick(){
         if(!!element){
             //Use cypress selector if any fits
             if(!!element.id){ //boolean that indicates if the element has a non-empty id
-                cy.get(`#${element.id}`).click()
+                cy.get(`#${element.id}`).click({force: true})
                 info = `${element.tagName} with id: ${element.id}`
             }
             /*
@@ -509,7 +508,7 @@ function fillInput(){ //Or fill form
         let info = ""
         if($inputs.length > 0){
             var inp = $inputs.item(getRandomInt(0, $inputs.length));
-            //console.log(inp);
+            cy.task('genericLog', {"message": `input: ${inp}`});
             //console.log(inp.getAttribute("type"));
             if(!Cypress.dom.isHidden(inp)) {
                 focused = true;
@@ -593,7 +592,7 @@ function randomEvent(){
         screenshotIndex += 1;
         cy.screenshot(screenshotIndex+"-"+ getEvtType(typeIndex)+"-before");
         let fIndex = getRandomInt(0, functions[typeIndex].length-1);
-        cy.log(`Executing: ${functions[typeIndex][fIndex].name}`);
+        cy.task('genericLog', {"message": `Executing: ${functions[typeIndex][fIndex].name}`});
         functions[typeIndex][fIndex]();
         pending_events[typeIndex] --;
         cy.wait(delay);
