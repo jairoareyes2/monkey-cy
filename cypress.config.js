@@ -72,7 +72,7 @@ module.exports = {
     },
     video: true,
     projectId: "TSDL-Monkey-with-cypress",
-    baseUrl: "http://localhost:3001/",
+    baseUrl: "http://localhost:2368/",
     pageLoadTimeout: 120000,
     defaultCommandTimeout: 120000,
     videosFolder: "./results",
@@ -92,7 +92,7 @@ module.exports = {
       smartMonkey: {
         appName: "Ghost - test",
         events: 50,
-        delay: 300,
+        delay: 500,
         seed: 3496,
         pctClicks: 12,
         pctScroll: 12,

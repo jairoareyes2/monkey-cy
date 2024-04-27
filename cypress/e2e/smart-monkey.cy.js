@@ -76,6 +76,20 @@ var curPageMaxY = viewportHeight
 var evtIndex = 1
 var focused = false
 
+describe('Login and perform actions', () => {
+    it('Successfully logs in', () => {
+      cy.visit('http://localhost:2368/ghost/#/signin') 
+      cy.get('input[name=identification]').type('river29ster@gmail.com') 
+      cy.get('input[id=password]').type('carlosrios') 
+      cy.get('button[id=ember5]').click() 
+  
+      // Verifica que es la página correcta después de iniciar sesión
+      cy.url().should('include', '/dashboard')
+                    })
+    it('Navigate to another page', () => {
+        cy.visit('http://localhost:2368/ghost/#/dashboard')
+                     })
+     })
 function randClick(){
     
     let randX = getRandomInt(curX, viewportWidth)
