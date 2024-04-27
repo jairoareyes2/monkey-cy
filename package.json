@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "cypress-plugin-tab": "^1.0.5",
+    "fs": "^0.0.1-security"
+  },
+  "devDependencies": {
+    "faker": "^6.6.6"
+  }
+}
